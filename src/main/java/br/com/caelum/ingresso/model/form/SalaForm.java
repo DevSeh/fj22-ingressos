@@ -1,8 +1,11 @@
 package br.com.caelum.ingresso.model.form;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -15,7 +18,18 @@ public class SalaForm {
     @NotBlank
     private String nome;
 
-    private List<Lugar> lugares = new ArrayList<>();
+    @NotNull
+    private BigDecimal preco;
+    
+    public BigDecimal getPreco() {
+		return preco;
+	}
+
+	public void setPreco(BigDecimal preco) {
+		this.preco = preco;
+	}
+
+	private List<Lugar> lugares = new ArrayList<>();
 
     public SalaForm() {
     }
@@ -24,6 +38,8 @@ public class SalaForm {
         this.salaId = sala.getId();
         this.nome = sala.getNome();
         this.lugares = new ArrayList<>(sala.getLugares());
+        this.preco = sala.getPreco();
+        
     }
 
     public Integer getSalaId() {
@@ -51,7 +67,7 @@ public class SalaForm {
     }
 
     public Sala toSala() {
-        Sala sala = new Sala(this.nome);
+        Sala sala = new Sala(this.nome,this.preco);
         sala.setId(this.salaId);
         sala.setLugares(new HashSet<>(this.lugares));
         return sala;
