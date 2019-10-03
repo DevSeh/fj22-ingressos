@@ -3,15 +3,22 @@ package br.com.caelum.ingresso.model;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import br.com.caelum.ingresso.model.desconto.Ingresso;
 
 @Entity
-
 public class Sessao {
 	
 	@Id
@@ -28,8 +35,19 @@ public class Sessao {
 	
 	private LocalTime horario;
 	
+	@OneToMany(mappedBy = "sessao", fetch = FetchType.EAGER)
+	private Set<Ingresso> ingressos = new HashSet<>();
+	
 	public Sessao () {}
 	
+	public Set<Ingresso> getIngressos() {
+		return ingressos;
+	}
+
+	public void setIngressos(Set<Ingresso> ingressos) {
+		this.ingressos = ingressos;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -76,4 +94,11 @@ public class Sessao {
 		this.sala = sala;
 		this.preco = sala.getPreco().add(filme.getPreco());
 	}
+	public Map<String, List<Lugar>> getMapaDeLugares() {
+		return sala.getMapaDeLugares();
+	}
+	public boolean isDisponivel(Lugar lugarSelecionado) {
+		return ingressos.stream().map(Ingresso::getLugar).noneMatch(lugar -> lugar.equals(lugarSelecionado));
+	}
+	
 }
