@@ -100,5 +100,7 @@ public class Lugar {
     public String toString() {
         return this.fileira + this.posicao;
     }
+    
+
 
 }
